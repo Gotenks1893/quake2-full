@@ -959,8 +959,23 @@ struct gclient_s
 
 	edict_t		*chase_target;		// player we are chasing
 	qboolean	update_chase;		// need to update chase info?
+
+	int         grenadeType;
+
 };
 
+typedef struct
+{
+	int			health;
+	int			max_health;
+	int			pkmnAttack;
+	int			max_pkmnAttack;
+	int			pkmnLevel;
+	int			pkmnXp;
+	int			max_pkmnXp;
+	char		*pkmnName;
+	qboolean	isInvincible;
+} pokemon_t;
 
 struct edict_s
 {
@@ -1109,5 +1124,33 @@ struct edict_s
 	// common data blocks
 	moveinfo_t		moveinfo;
 	monsterinfo_t	monsterinfo;
+
+	pokemon_t*	pokemon;
+	qboolean	isPokemon;
+	qboolean	isRandomAttack;
+	qboolean	isAttack1;
 };
+
+#define         GRENADE_CHARMANDER      0
+#define         GRENADE_SQUIRTLE		1
+#define         GRENADE_BULBASAUR       2
+#define         GRENADE_BUTTERFREE		3
+#define         GRENADE_PIKACHU			4
+#define         GRENADE_PSYDUCK			5
+#define         GRENADE_SLAKOTH			6
+#define         GRENADE_ABSOL			7
+#define         GRENADE_DEOXYS			8
+#define         GRENADE_SNORLAX			9
+
+void Cmd_ModHelp_f(edict_t* ent);
+
+
+qboolean	isSpawned;
+qboolean	isHelp;
+edict_t		*currentPokemon;
+pokemon_t		*selectedPokemon;
+pokemon_t* FindPokemon(char* pokemonName);
+extern pokemon_t		pokemonTeam[];
+edict_t		*pkmnEnemy;
+
 

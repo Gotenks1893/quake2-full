@@ -645,63 +645,91 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 
 #endif
 
-char *single_statusbar = 
-"yb	-24 "
+	char* single_statusbar =
+	"yb	-24 "
 
-// health
-"xv	0 "
-"hnum "
-"xv	50 "
-"pic 0 "
+	// health
+	//"xv	0 "
+	//"hnum "
+	//"xv	50 "
+	//"pic 0 "
 
-// ammo
-"if 2 "
-"	xv	100 "
-"	anum "
-"	xv	150 "
-"	pic 2 "
-"endif "
+		// ammo
+	"if 2 "
+	"	xv	100 "
+	"	num	2	3 "
+	"	xv	150 "
+	"	pic 2 "
+	"endif "
 
-// armor
-"if 4 "
-"	xv	200 "
-"	rnum "
-"	xv	250 "
-"	pic 4 "
-"endif "
+	// armor
+	"if 4 "
+	"	xv	200 "
+	"	rnum "
+	"	xv	250 "
+	"	pic 4 "
+	"endif "
 
-// selected item
-"if 6 "
-"	xv	296 "
-"	pic 6 "
-"endif "
+	// selected item
+	"if 6 "
+	"	xv	296 "
+	"	pic 6 "
+	"endif "
 
-"yb	-50 "
+	"yb	-50 "
 
-// picked up item
-"if 7 "
-"	xv	0 "
-"	pic 7 "
-"	xv	26 "
-"	yb	-42 "
-"	stat_string 8 "
-"	yb	-50 "
-"endif "
+	// picked up item
+	"if 7 "
+	"	xv	0 "
+	"	pic 7 "
+	"	xv	26 "
+	"	yb	-42 "
+	"	stat_string 8 "
+	"	yb	-50 "
+	"endif "
 
-// timer
-"if 9 "
-"	xv	262 "
-"	num	2	10 "
-"	xv	296 "
-"	pic	9 "
-"endif "
+	//// timer
+	//"if 9 "
+	//"	yb	-24 "		// New. Set Y-cursor -24 pixels from physical screen bottom
+	//"	xr	-58 "		// New. Set X-cursor -58 pixels from physical screen right
+	//"	num	2	10 "
+	//"	xr	-24 "		// New
+	//"	pic	9 "
+	//"endif "
 
-//  help / weapon icon 
-"if 11 "
-"	xv	148 "
-"	pic	11 "
-"endif "
-;
+	//// timer2			// New
+	//"if 16 "			// New. If STAT_TIMER2_ICON is not zero, then do
+	//"	yb	-48 "		// New
+	//"	xr	-58 "		// New
+	//"	num	2	17 "	// New. Display 2-digits with value from stat-array at index 17
+	//"	xr	-24 "		// New
+	//"	pic	16 "		// New. Display icon
+	//"endif "			// New
+
+	//// timer3			// New
+	//"if 18 "			// New. If STAT_TIMER3_ICON is not zero, then do
+	//"	yb	-72 "		// New
+	//"	xr	-58 "		// New
+	//"	num	2	19 "	// New. Display 2-digits with value from stat-array at index 19
+	//"	xr	-24 "		// New
+	//"	pic	18 "		// New. Display icon
+	//"endif "			// New
+
+	//// timer4			// New
+	//"if 20 "			// New. If STAT_TIMER4_ICON is not zero, then do
+	//"	yb	-96 "		// New
+	//"	xr	-58 "		// New
+	//"	num	2	21 "	// New. Display 2-digits with value from stat-array at index 21
+	//"	xr	-24 "		// New
+	//"	pic	20 "		// New. Display icon
+	//"endif "			// New
+
+	//  help / weapon icon 
+	"if 11 "
+	"	xv	148 "
+	"	pic	11 "
+	"endif "
+	;
 
 char *dm_statusbar =
 "yb	-24 "

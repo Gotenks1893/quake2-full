@@ -131,10 +131,18 @@ void GaldiatorMelee (edict_t *self)
 	vec3_t	aim;
 
 	VectorSet (aim, MELEE_DISTANCE, self->mins[0], -4);
-	if (fire_hit (self, aim, (20 + (rand() %5)), 300))
-		gi.sound (self, CHAN_AUTO, sound_cleaver_hit, 1, ATTN_NORM, 0);
-	else
-		gi.sound (self, CHAN_AUTO, sound_cleaver_miss, 1, ATTN_NORM, 0);
+	if (self->isPokemon) {
+		if (fire_hit(self, aim, (self->pokemon->pkmnAttack + (rand() % 5)), 300))
+			gi.sound(self, CHAN_AUTO, sound_cleaver_hit, 1, ATTN_NORM, 0);
+		else
+			gi.sound(self, CHAN_AUTO, sound_cleaver_miss, 1, ATTN_NORM, 0);
+	}
+	else {
+		if (fire_hit(self, aim, (20 + (rand() % 5)), 300))
+			gi.sound(self, CHAN_AUTO, sound_cleaver_hit, 1, ATTN_NORM, 0);
+		else
+			gi.sound(self, CHAN_AUTO, sound_cleaver_miss, 1, ATTN_NORM, 0);
+	}
 }
 
 mframe_t gladiator_frames_attack_melee [] =
@@ -177,8 +185,12 @@ void GladiatorGun (edict_t *self)
 	// calc direction to where we targted
 	VectorSubtract (self->pos1, start, dir);
 	VectorNormalize (dir);
-
-	monster_fire_railgun (self, start, dir, 50, 100, MZ2_GLADIATOR_RAILGUN_1);
+	if (self->isPokemon) {
+		monster_fire_railgun (self, start, dir, 50 + self->pokemon->pkmnAttack, 100, MZ2_GLADIATOR_RAILGUN_1);
+	}
+	else {
+		monster_fire_railgun (self, start, dir, 50, 100, MZ2_GLADIATOR_RAILGUN_1);
+	}
 }
 
 mframe_t gladiator_frames_attack_gun [] =
@@ -382,6 +394,7 @@ void SP_monster_gladiator (edict_t *self)
 	gi.linkentity (self);
 	self->monsterinfo.currentmove = &gladiator_move_stand;
 	self->monsterinfo.scale = MODEL_SCALE;
-
+	self->pokemon = NULL;
+	self->isPokemon = false;
 	walkmonster_start (self);
 }

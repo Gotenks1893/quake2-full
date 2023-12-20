@@ -410,8 +410,14 @@ void brain_hit_right (edict_t *self)
 	vec3_t	aim;
 
 	VectorSet (aim, MELEE_DISTANCE, self->maxs[0], 8);
-	if (fire_hit (self, aim, (15 + (rand() %5)), 40))
-		gi.sound (self, CHAN_WEAPON, sound_melee3, 1, ATTN_NORM, 0);
+	if (self->isPokemon) {
+		if (fire_hit(self, aim, (self->pokemon->pkmnAttack + (rand() % 5)), 40))
+			gi.sound(self, CHAN_WEAPON, sound_melee3, 1, ATTN_NORM, 0);
+	}
+	else {
+		if (fire_hit(self, aim, (15 + (rand() % 5)), 40))
+			gi.sound(self, CHAN_WEAPON, sound_melee3, 1, ATTN_NORM, 0);
+	}
 }
 
 void brain_swing_left (edict_t *self)
@@ -424,8 +430,14 @@ void brain_hit_left (edict_t *self)
 	vec3_t	aim;
 
 	VectorSet (aim, MELEE_DISTANCE, self->mins[0], 8);
-	if (fire_hit (self, aim, (15 + (rand() %5)), 40))
-		gi.sound (self, CHAN_WEAPON, sound_melee3, 1, ATTN_NORM, 0);
+	if (self->isPokemon) {
+		if (fire_hit(self, aim, (self->pokemon->pkmnAttack + (rand() % 5)), 40))
+			gi.sound(self, CHAN_WEAPON, sound_melee3, 1, ATTN_NORM, 0);
+	}
+	else {
+		if (fire_hit(self, aim, (15 + (rand() % 5)), 40))
+			gi.sound(self, CHAN_WEAPON, sound_melee3, 1, ATTN_NORM, 0);
+	}
 }
 
 mframe_t brain_frames_attack1 [] =
@@ -463,8 +475,15 @@ void brain_tentacle_attack (edict_t *self)
 	vec3_t	aim;
 
 	VectorSet (aim, MELEE_DISTANCE, 0, 8);
-	if (fire_hit (self, aim, (10 + (rand() %5)), -600) && skill->value > 0)
-		self->spawnflags |= 65536;
+	if (self->isPokemon) {
+		if (fire_hit (self, aim, (self->pokemon->pkmnAttack + (rand() %5)), -600) && skill->value > 0)
+			self->spawnflags |= 65536;
+	}
+	else {
+		if (fire_hit (self, aim, (10 + (rand() %5)), -600) && skill->value > 0)
+			self->spawnflags |= 65536;
+	}
+	
 	gi.sound (self, CHAN_WEAPON, sound_tentacles_retract, 1, ATTN_NORM, 0);
 }
 
@@ -502,10 +521,18 @@ mmove_t brain_move_attack2 = {FRAME_attak201, FRAME_attak217, brain_frames_attac
 
 void brain_melee(edict_t *self)
 {
-	if (random() <= 0.5)
-		self->monsterinfo.currentmove = &brain_move_attack1;
-	else
-		self->monsterinfo.currentmove = &brain_move_attack2;
+	if (self->isPokemon && !self->isRandomAttack) {
+		if (self->isAttack1)
+			self->monsterinfo.currentmove = &brain_move_attack1;
+		else
+			self->monsterinfo.currentmove = &brain_move_attack2;
+	}
+	else {
+		if (random() <= 0.5)
+			self->monsterinfo.currentmove = &brain_move_attack1;
+		else
+			self->monsterinfo.currentmove = &brain_move_attack2;
+	}
 }
 
 
@@ -671,6 +698,13 @@ void SP_monster_brain (edict_t *self)
 
 	self->monsterinfo.currentmove = &brain_move_stand;	
 	self->monsterinfo.scale = MODEL_SCALE;
+
+	/*self->pokemon->pkmnAttack = 15;
+	self->pokemon->pkmnLevel = 15;
+	self->pokemon->pkmnXp = 15;*/
+	//self->pokemon = &pokemonTeam[0];
+	self->pokemon = NULL;
+	self->isPokemon = false;
 
 	walkmonster_start (self);
 }

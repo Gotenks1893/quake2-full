@@ -121,7 +121,41 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 		targ->touch = NULL;
 		monster_death_use (targ);
 	}
-
+	if (targ->isPokemon && targ->health > (0 - damage)) {
+		if(currentPokemon) {
+			if (currentPokemon->health <= 0) {
+				gi.dprintf("%s got killed by enemy!\n", targ->pokemon->pkmnName);
+				isSpawned = false;
+				if (targ->pokemon)
+					targ->pokemon->health = 0;
+				currentPokemon = NULL;
+			}
+		}
+	}
+	if (attacker->isPokemon && targ->health > (0-damage)) {
+		gi.dprintf("%s killed enemy!\n", attacker->pokemon->pkmnName);
+		attacker->pokemon->pkmnXp += 10;
+		if (attacker->pokemon->pkmnAttack > attacker->pokemon->max_pkmnAttack) {
+			gi.dprintf("X-Attack wears off! Attack of %s is normal again.\n", attacker->pokemon->pkmnName);
+			attacker->pokemon->pkmnAttack = attacker->pokemon->max_pkmnAttack;
+		}
+		if (attacker->pokemon->isInvincible) {
+			gi.dprintf("Invincibility wears off! %s vulnerable again.\n", attacker->pokemon->pkmnName);
+			attacker->pokemon->isInvincible = false;
+		}
+		if (attacker->pokemon->pkmnXp >= attacker->pokemon->max_pkmnXp) {
+			attacker->pokemon->pkmnXp = attacker->pokemon->pkmnXp - attacker->pokemon->max_pkmnXp;
+			attacker->pokemon->pkmnLevel++;
+			attacker->pokemon->max_health += 5;
+			attacker->max_health += 5;
+			attacker->pokemon->health += 5;
+			attacker->health += 5;
+			attacker->pokemon->max_pkmnXp += 3;
+			attacker->pokemon->max_pkmnAttack += 5;
+			attacker->pokemon->pkmnAttack += 5;
+			gi.dprintf("%s reached level %i!\n", attacker->pokemon->pkmnName, attacker->pokemon->pkmnLevel);
+		}
+	}
 	targ->die (targ, inflictor, attacker, damage, point);
 }
 
@@ -382,8 +416,14 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 	int			asave;
 	int			psave;
 	int			te_sparks;
-
+	if (targ->isPokemon) {
+		if (targ->pokemon->isInvincible) {
+			return;
+		}
+	}
 	if (!targ->takedamage)
+		return;
+	if (targ->client || attacker->client)
 		return;
 
 	// friendly fire avoidance
@@ -535,6 +575,10 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		client->damage_blood += take;
 		client->damage_knockback += knockback;
 		VectorCopy (point, client->damage_from);
+	}
+
+	if (targ->isPokemon) {
+		targ->pokemon->health = targ->health;
 	}
 }
 

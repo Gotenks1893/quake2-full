@@ -66,7 +66,9 @@ void AI_SetSightClient (void)
 		ent = &g_edicts[check];
 		if (ent->inuse
 			&& ent->health > 0
-			&& !(ent->flags & FL_NOTARGET) )
+			&& !(ent->flags & FL_NOTARGET
+			&& !ent->client
+			) )
 		{
 			level.sight_client = ent;
 			return;		// got one
@@ -347,15 +349,15 @@ void HuntTarget (edict_t *self)
 void FoundTarget (edict_t *self)
 {
 	// let other monsters see this monster for a while
-	if (self->enemy->client)
-	{
-		level.sight_entity = self;
-		level.sight_entity_framenum = level.framenum;
-		level.sight_entity->light_level = 128;
-	}
+	//if (self->enemy->client)
+	//{
+	//	level.sight_entity = self;
+	//	level.sight_entity_framenum = level.framenum;
+	//	level.sight_entity->light_level = 128;
+	//}
 
-	self->show_hostile = level.time + 1;		// wake up other monsters
-
+	//self->show_hostile = level.time + 1;		// wake up other monsters
+	level.sight_client = self->enemy;
 	VectorCopy(self->enemy->s.origin, self->monsterinfo.last_sighting);
 	self->monsterinfo.trail_time = level.time;
 
@@ -386,6 +388,13 @@ void FoundTarget (edict_t *self)
 	self->monsterinfo.run (self);
 }
 
+int CheckEnemyDistance(edict_t* self, edict_t* enemy)
+{
+	vec3_t v;
+
+	VectorSubtract(self->s.origin, enemy->s.origin, v);
+	return VectorLength(v);
+}
 
 /*
 ===========
@@ -407,6 +416,8 @@ slower noticing monsters.
 qboolean FindTarget (edict_t *self)
 {
 	edict_t		*client;
+
+	 /*
 	qboolean	heardit;
 	int			r;
 
@@ -578,8 +589,47 @@ qboolean FindTarget (edict_t *self)
 
 	if (!(self->monsterinfo.aiflags & AI_SOUND_TARGET) && (self->monsterinfo.sight))
 		self->monsterinfo.sight (self, self->enemy);
+	
+	*/
 
-	return true;
+	//pokemon = FindMonsterTarget(self);
+
+	//if (pokemon)
+	//{
+	//	self->enemy = pokemon;
+
+	//	//if (self->monsterinfo.sight && (self->enemy != self->oldenemy))
+	//	//	self->monsterinfo.sight(self, monster);
+	//	FoundTarget(self);
+	//	return true;
+	//}
+	if (isSpawned && currentPokemon)
+	{
+		if (CheckEnemyDistance(self, currentPokemon) > 500)
+			return false;
+		if (!self->isPokemon) {
+			if (currentPokemon->health > 0) {
+				self->enemy = currentPokemon;
+				if (self->monsterinfo.sight && (self->enemy != self->oldenemy))
+					self->monsterinfo.sight(self, currentPokemon);
+				FoundTarget(self);
+				return true;
+			}
+		}
+		else if (pkmnEnemy) {
+			if (pkmnEnemy->health > 0) {
+				self->enemy = pkmnEnemy;
+				if (self->monsterinfo.sight && (self->enemy != self->oldenemy))
+					self->monsterinfo.sight(self, pkmnEnemy);
+				FoundTarget(self);
+				return true;
+			}
+		}
+	}
+	self->enemy = NULL;
+	self->oldenemy = NULL;
+
+	return false;
 }
 
 

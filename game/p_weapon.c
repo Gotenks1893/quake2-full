@@ -173,6 +173,9 @@ current
 */
 void ChangeWeapon (edict_t *ent)
 {
+	if (isSpawned) {
+		return;
+	}
 	int i;
 
 	if (ent->client->grenade_time)
@@ -545,50 +548,63 @@ GRENADE
 
 void weapon_grenade_fire (edict_t *ent, qboolean held)
 {
-	vec3_t	offset;
-	vec3_t	forward, right;
-	vec3_t	start;
-	int		damage = 125;
-	float	timer;
-	int		speed;
-	float	radius;
+	if (!isSpawned && selectedPokemon->health > 0) {
+		vec3_t	offset;
+		vec3_t	forward, right;
+		vec3_t	start;
+		int		damage = 125;
+		float	timer;
+		int		speed;
+		float	radius;
 
-	radius = damage+40;
-	if (is_quad)
-		damage *= 4;
+		radius = damage+40;
+		if (is_quad)
+			damage *= 4;
 
-	VectorSet(offset, 8, 8, ent->viewheight-8);
-	AngleVectors (ent->client->v_angle, forward, right, NULL);
-	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+		VectorSet(offset, 8, 8, ent->viewheight-8);
+		AngleVectors (ent->client->v_angle, forward, right, NULL);
+		P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 
-	timer = ent->client->grenade_time - level.time;
-	speed = GRENADE_MINSPEED + (GRENADE_TIMER - timer) * ((GRENADE_MAXSPEED - GRENADE_MINSPEED) / GRENADE_TIMER);
-	fire_grenade2 (ent, start, forward, damage, speed, timer, radius, held);
+		timer = ent->client->grenade_time - level.time;
+		speed = GRENADE_MINSPEED + (GRENADE_TIMER - timer) * ((GRENADE_MAXSPEED - GRENADE_MINSPEED) / GRENADE_TIMER);
+		fire_grenade2 (ent, start, forward, damage, speed, timer, radius, held);
 
-	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-		ent->client->pers.inventory[ent->client->ammo_index]--;
+		//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
+		//	ent->client->pers.inventory[ent->client->ammo_index]--;
 
-	ent->client->grenade_time = level.time + 1.0;
+		ent->client->grenade_time = level.time + 1.0;
 
-	if(ent->deadflag || ent->s.modelindex != 255) // VWep animations screw up corpses
-	{
-		return;
+		if(ent->deadflag || ent->s.modelindex != 255) // VWep animations screw up corpses
+		{
+			return;
+		}
+
+		if (ent->health <= 0)
+			return;
+
+		if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
+		{
+			ent->client->anim_priority = ANIM_ATTACK;
+			ent->s.frame = FRAME_crattak1-1;
+			ent->client->anim_end = FRAME_crattak3;
+		}
+		else
+		{
+			ent->client->anim_priority = ANIM_REVERSE;
+			ent->s.frame = FRAME_wave08;
+			ent->client->anim_end = FRAME_wave01;
+		}
 	}
-
-	if (ent->health <= 0)
-		return;
-
-	if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
+	else if(currentPokemon)
 	{
-		ent->client->anim_priority = ANIM_ATTACK;
-		ent->s.frame = FRAME_crattak1-1;
-		ent->client->anim_end = FRAME_crattak3;
+		gi.dprintf("%s already on the field!\n", currentPokemon->pokemon->pkmnName);
 	}
-	else
+	else if (selectedPokemon->health <= 0)
 	{
-		ent->client->anim_priority = ANIM_REVERSE;
-		ent->s.frame = FRAME_wave08;
-		ent->client->anim_end = FRAME_wave01;
+		gi.dprintf("%s is dead! Please revive %s first.\n", selectedPokemon->pkmnName, selectedPokemon->pkmnName);
+	}
+	else {
+		gi.dprintf("Pokemon is already spawning!\n");
 	}
 }
 

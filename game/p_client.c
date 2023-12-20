@@ -1244,6 +1244,24 @@ void PutClientInServer (edict_t *ent)
 	} else
 		client->resp.spectator = false;
 
+	client->grenadeType = GRENADE_CHARMANDER;
+	isSpawned = false;
+	isHelp = false;
+	currentPokemon = NULL;
+	//pokemon_t charmander;
+	//charmander.health = 300;
+	//charmander.pkmnAttack = 200;
+	//charmander.pkmnLevel = 5;
+	//charmander.pkmnName = "Charmander";
+	//charmander.pkmnXp = 0;
+
+	pkmnEnemy = NULL;
+	selectedPokemon = &pokemonTeam[0];
+	//selectedPokemon->pkmnAttack = pkmn->pkmnAttack;
+	//selectedPokemon->isPokemon = true;
+	//selectedPokemon->pkmnLevel = pkmn->pkmnLevel;
+	//selectedPokemon->pkmnXp = pkmn->pkmnXp;
+	//selectedPokemon->pkmnName = pkmn->pkmnName;
 	if (!KillBox (ent))
 	{	// could't spawn in?
 	}

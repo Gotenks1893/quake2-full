@@ -383,56 +383,67 @@ void G_SetStats (edict_t *ent)
 	//
 	// health
 	//
-	ent->client->ps.stats[STAT_HEALTH_ICON] = level.pic_health;
-	ent->client->ps.stats[STAT_HEALTH] = ent->health;
+	//ent->client->ps.stats[STAT_HEALTH_ICON] = level.pic_health;
+	//if (selectedPokemon) {
+	//	ent->client->ps.stats[STAT_HEALTH] = selectedPokemon->health;
+	//	ent->client->ps.stats[STAT_AMMO] = selectedPokemon->pkmnLevel;
+	//	item = &itemlist[12];
+	//	ent->client->ps.stats[STAT_AMMO_ICON] = gi.imageindex(item->icon);
+	//}
+	//else {
+	//	ent->client->ps.stats[STAT_HEALTH] = 0;
+	//	ent->client->ps.stats[STAT_AMMO_ICON] = 0;
+	//	ent->client->ps.stats[STAT_AMMO] = 0;
+	//}
 
 	//
 	// ammo
 	//
-	if (!ent->client->ammo_index /* || !ent->client->pers.inventory[ent->client->ammo_index] */)
-	{
-		ent->client->ps.stats[STAT_AMMO_ICON] = 0;
-		ent->client->ps.stats[STAT_AMMO] = 0;
-	}
-	else
-	{
-		item = &itemlist[ent->client->ammo_index];
-		ent->client->ps.stats[STAT_AMMO_ICON] = gi.imageindex (item->icon);
-		ent->client->ps.stats[STAT_AMMO] = ent->client->pers.inventory[ent->client->ammo_index];
-	}
+	//if (!ent->client->ammo_index /* || !ent->client->pers.inventory[ent->client->ammo_index] */)
+	//{
+	//	ent->client->ps.stats[STAT_AMMO_ICON] = 0;
+	//	ent->client->ps.stats[STAT_AMMO] = 0;
+	//}
+	//else
+	//{
+	//	item = &itemlist[ent->client->ammo_index];
+	//	ent->client->ps.stats[STAT_AMMO_ICON] = gi.imageindex (item->icon);
+	//}
 	
 	//
 	// armor
 	//
-	power_armor_type = PowerArmorType (ent);
-	if (power_armor_type)
-	{
-		cells = ent->client->pers.inventory[ITEM_INDEX(FindItem ("cells"))];
-		if (cells == 0)
-		{	// ran out of cells for power armor
-			ent->flags &= ~FL_POWER_ARMOR;
-			gi.sound(ent, CHAN_ITEM, gi.soundindex("misc/power2.wav"), 1, ATTN_NORM, 0);
-			power_armor_type = 0;;
-		}
-	}
+	//power_armor_type = PowerArmorType (ent);
+	//if (power_armor_type)
+	//{
+	//	cells = ent->client->pers.inventory[ITEM_INDEX(FindItem ("cells"))];
+	//	if (cells == 0)
+	//	{	// ran out of cells for power armor
+	//		ent->flags &= ~FL_POWER_ARMOR;
+	//		gi.sound(ent, CHAN_ITEM, gi.soundindex("misc/power2.wav"), 1, ATTN_NORM, 0);
+	//		power_armor_type = 0;;
+	//	}
+	//}
 
-	index = ArmorIndex (ent);
-	if (power_armor_type && (!index || (level.framenum & 8) ) )
-	{	// flash between power armor and other armor icon
-		ent->client->ps.stats[STAT_ARMOR_ICON] = gi.imageindex ("i_powershield");
-		ent->client->ps.stats[STAT_ARMOR] = cells;
-	}
-	else if (index)
-	{
-		item = GetItemByIndex (index);
-		ent->client->ps.stats[STAT_ARMOR_ICON] = gi.imageindex (item->icon);
-		ent->client->ps.stats[STAT_ARMOR] = ent->client->pers.inventory[index];
-	}
-	else
-	{
-		ent->client->ps.stats[STAT_ARMOR_ICON] = 0;
-		ent->client->ps.stats[STAT_ARMOR] = 0;
-	}
+	//index = ArmorIndex (ent);
+	//if (power_armor_type && (!index || (level.framenum & 8) ) )
+	//{	// flash between power armor and other armor icon
+	//	ent->client->ps.stats[STAT_ARMOR_ICON] = gi.imageindex ("i_powershield");
+	//	ent->client->ps.stats[STAT_ARMOR] = cells;
+	//}
+	//else if (index)
+	//{
+	//	item = GetItemByIndex (index);
+	//	ent->client->ps.stats[STAT_ARMOR_ICON] = gi.imageindex (item->icon);
+	//	ent->client->ps.stats[STAT_ARMOR] = ent->client->pers.inventory[index];
+	//}
+	//else
+	//{
+	//	ent->client->ps.stats[STAT_ARMOR_ICON] = gi.imageindex("i_powershield");
+	//	ent->client->ps.stats[STAT_ARMOR] = pokemon->pkmnAttack;
+	//}
+
+
 
 	//
 	// pickup message
@@ -443,44 +454,108 @@ void G_SetStats (edict_t *ent)
 		ent->client->ps.stats[STAT_PICKUP_STRING] = 0;
 	}
 
+	////
+	//// timers
+	////
+	//if (ent->client->quad_framenum > level.framenum)
+	//{
+	//	ent->client->ps.stats[STAT_TIMER_ICON] = gi.imageindex ("p_quad");
+	//	ent->client->ps.stats[STAT_TIMER] = (ent->client->quad_framenum - level.framenum)/10;
+	//}
+	//else if (ent->client->invincible_framenum > level.framenum)
+	//{
+	//	ent->client->ps.stats[STAT_TIMER_ICON] = gi.imageindex ("p_invulnerability");
+	//	ent->client->ps.stats[STAT_TIMER] = (ent->client->invincible_framenum - level.framenum)/10;
+	//}
+	//else if (ent->client->enviro_framenum > level.framenum)
+	//{
+	//	ent->client->ps.stats[STAT_TIMER_ICON] = gi.imageindex ("p_envirosuit");
+	//	ent->client->ps.stats[STAT_TIMER] = (ent->client->enviro_framenum - level.framenum)/10;
+	//}
+	//else if (ent->client->breather_framenum > level.framenum)
+	//{
+	//	ent->client->ps.stats[STAT_TIMER_ICON] = gi.imageindex ("p_rebreather");
+	//	ent->client->ps.stats[STAT_TIMER] = (ent->client->breather_framenum - level.framenum)/10;
+	//}
+	//else
+	//{
+	//	ent->client->ps.stats[STAT_TIMER_ICON] = 0;
+	//	ent->client->ps.stats[STAT_TIMER] = 0;
+	//}
+
 	//
 	// timers
-	//
-	if (ent->client->quad_framenum > level.framenum)
+	char	string[1024];
+
+	if (currentPokemon && !isHelp)
 	{
-		ent->client->ps.stats[STAT_TIMER_ICON] = gi.imageindex ("p_quad");
-		ent->client->ps.stats[STAT_TIMER] = (ent->client->quad_framenum - level.framenum)/10;
+
+		if (currentPokemon->health > 0 && selectedPokemon) {
+			// send the layout
+			Com_sprintf(string, sizeof(string),
+				"xr -135 yb -144 string2 \"Fighting Pokemon:\" "	// Fighing Pokemon
+				"xr -135 yb -120 string2 \"%s\" "				// Pokemon name
+				"xr -135 yb -96 string2 \"Lvl:    %i\" "		// lvl
+				"xr -135 yb -72 string2 \"Xp:     %i/%i\" "		// Xp 
+				"xr -135 yb -48 string2 \"Health: %i/%i\" "		// Health
+				"xr -135 yb -24 string2 \"Attack: %i/%i\" "		// Attack
+				"xl 15 yb -144 string2 \"Selected Pokemon:\" "	// Selected Pokemon
+				"xl 15 yb -120 string2 \"%s\" "					// Pokemon name
+				"xl 15 yb -96 string2 \"Lvl:    %i\" "			// lvl
+				"xl 15 yb -72 string2 \"Xp:     %i/%i\" "		// Xp 
+				"xl 15 yb -48 string2 \"Health: %i/%i\" "		// Health
+				"xl 15 yb -24 string2 \"Attack: %i/%i\" ",		// Attack
+				currentPokemon->pokemon->pkmnName, currentPokemon->pokemon->pkmnLevel,
+				currentPokemon->pokemon->pkmnXp, currentPokemon->pokemon->max_pkmnXp,
+				currentPokemon->health, currentPokemon->max_health,
+				currentPokemon->pokemon->pkmnAttack, currentPokemon->pokemon->max_pkmnAttack,
+				selectedPokemon->pkmnName, selectedPokemon->pkmnLevel,
+				selectedPokemon->pkmnXp, selectedPokemon->max_pkmnXp,
+				selectedPokemon->health, selectedPokemon->max_health,
+				selectedPokemon->pkmnAttack, selectedPokemon->max_pkmnAttack);
+		}
+
+		gi.WriteByte(svc_layout);
+		gi.WriteString(string);
+		gi.unicast(ent, true);
+
+		ent->client->showhelp = true;
+
 	}
-	else if (ent->client->invincible_framenum > level.framenum)
-	{
-		ent->client->ps.stats[STAT_TIMER_ICON] = gi.imageindex ("p_invulnerability");
-		ent->client->ps.stats[STAT_TIMER] = (ent->client->invincible_framenum - level.framenum)/10;
-	}
-	else if (ent->client->enviro_framenum > level.framenum)
-	{
-		ent->client->ps.stats[STAT_TIMER_ICON] = gi.imageindex ("p_envirosuit");
-		ent->client->ps.stats[STAT_TIMER] = (ent->client->enviro_framenum - level.framenum)/10;
-	}
-	else if (ent->client->breather_framenum > level.framenum)
-	{
-		ent->client->ps.stats[STAT_TIMER_ICON] = gi.imageindex ("p_rebreather");
-		ent->client->ps.stats[STAT_TIMER] = (ent->client->breather_framenum - level.framenum)/10;
-	}
-	else
-	{
-		ent->client->ps.stats[STAT_TIMER_ICON] = 0;
-		ent->client->ps.stats[STAT_TIMER] = 0;
+	else if (!currentPokemon && !isHelp) {
+		if (selectedPokemon) {
+			Com_sprintf(string, sizeof(string),
+				"xl 15 yb -144 string2 \"Selected Pokemon:\" "	// Selected Pokemon
+				"xl 15 yb -120 string2 \"%s\" "					// Pokemon name
+				"xl 15 yb -96 string2 \"Lvl:    %i\" "			// lvl
+				"xl 15 yb -72 string2 \"Xp:     %i/%i\" "		// Xp 
+				"xl 15 yb -48 string2 \"Health: %i/%i\" "		// Health
+				"xl 15 yb -24 string2 \"Attack: %i/%i\" ",		// Attack
+				selectedPokemon->pkmnName, selectedPokemon->pkmnLevel,
+				selectedPokemon->pkmnXp, selectedPokemon->max_pkmnXp,
+				selectedPokemon->health, selectedPokemon->max_health,
+				selectedPokemon->pkmnAttack, selectedPokemon->max_pkmnAttack);
+
+			gi.WriteByte(svc_layout);
+			gi.WriteString(string);
+			gi.unicast(ent, true);
+
+			ent->client->showhelp = true;
+		}
+		else {
+			ent->client->showhelp = false;
+		}
 	}
 
 	//
 	// selected item
 	//
-	if (ent->client->pers.selected_item == -1)
+	/*if (ent->client->pers.selected_item == -1)
 		ent->client->ps.stats[STAT_SELECTED_ICON] = 0;
 	else
 		ent->client->ps.stats[STAT_SELECTED_ICON] = gi.imageindex (itemlist[ent->client->pers.selected_item].icon);
 
-	ent->client->ps.stats[STAT_SELECTED_ITEM] = ent->client->pers.selected_item;
+	ent->client->ps.stats[STAT_SELECTED_ITEM] = ent->client->pers.selected_item;*/
 
 	//
 	// layouts
@@ -506,20 +581,20 @@ void G_SetStats (edict_t *ent)
 	//
 	// frags
 	//
-	ent->client->ps.stats[STAT_FRAGS] = ent->client->resp.score;
+	//ent->client->ps.stats[STAT_FRAGS] = ent->client->resp.score;
 
 	//
 	// help icon / current weapon if not shown
 	//
-	if (ent->client->pers.helpchanged && (level.framenum&8) )
-		ent->client->ps.stats[STAT_HELPICON] = gi.imageindex ("i_help");
-	else if ( (ent->client->pers.hand == CENTER_HANDED || ent->client->ps.fov > 91)
-		&& ent->client->pers.weapon)
-		ent->client->ps.stats[STAT_HELPICON] = gi.imageindex (ent->client->pers.weapon->icon);
-	else
-		ent->client->ps.stats[STAT_HELPICON] = 0;
+	//if (ent->client->pers.helpchanged && (level.framenum&8) )
+	//	ent->client->ps.stats[STAT_HELPICON] = gi.imageindex ("i_help");
+	//else if ( (ent->client->pers.hand == CENTER_HANDED || ent->client->ps.fov > 91)
+	//	&& ent->client->pers.weapon)
+	//	ent->client->ps.stats[STAT_HELPICON] = gi.imageindex (ent->client->pers.weapon->icon);
+	//else
+	//	ent->client->ps.stats[STAT_HELPICON] = 0;
 
-	ent->client->ps.stats[STAT_SPECTATOR] = 0;
+	//ent->client->ps.stats[STAT_SPECTATOR] = 0;
 }
 
 /*
@@ -572,33 +647,21 @@ void G_SetSpectatorStats (edict_t *ent)
 void HelpMod(edict_t* ent)
 {
 	char	string[1024];
-	char* sk;
-
-	if (skill->value == 0)
-		sk = "easy";
-	else if (skill->value == 1)
-		sk = "medium";
-	else if (skill->value == 2)
-		sk = "hard";
-	else
-		sk = "hard+";
 
 	// send the layout
 	Com_sprintf(string, sizeof(string),
-		"xv 32 yv 8 picn help "			// background
-		"xv 202 yv 12 string2 \"%s\" "		// skill
-		"xv 0 yv 24 cstring2 \"%s\" "		// level name
+		//"xv 32 yv 8 picn help "			// background
+		//"xv 202 yv 12 string2 \"%s\" "		// skill
+		//"xv 0 yv 24 cstring2 \"%s\" "		// level name
 		"xv 0 yv 54 cstring2 \"%s\" "		// help 1
 		"xv 0 yv 110 cstring2 \"%s\" "		// help 2
-		"xv 50 yv 164 string2 \" kills     goals    secrets\" "
-		"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ",
-		sk,
-		level.level_name,
-		"Use the keys 0-9 to switch \nbetween your Pokemon. \nThen throw the Pokeball \nto spawn the Pokemon.",
-		"Use the mouse wheel to \nswitch between the \nabilities of the Pokemon.",
-		level.killed_monsters, level.total_monsters,
-		level.found_goals, level.total_goals,
-		level.found_secrets, level.total_secrets);
+		"xv 0 yv 164 cstring2 \"%s\" "		// help 3
+		/*"xv 50 yv 164 string2 \" kills     goals    secrets\" "
+		"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" "*/
+		,
+		"Use the keys 0-9 to switch \nbetween your Pokemon.\n Use q to retrieve a pokemon\n and e to spawn an enemy.",
+		"Use the keys j and k to \nswitch between the \nabilities of the Pokemon.",
+		"Use the keys p (potion),\nl (revive), x (x-attack),\nu (rarecandy) and i (protect) to \nuse the item on \nthe selected Pokemon.");
 
 	gi.WriteByte(svc_layout);
 	gi.WriteString(string);
@@ -610,12 +673,13 @@ void Cmd_ModHelp_f(edict_t* ent)
 	ent->client->showinventory = false;
 	ent->client->showscores = false;
 
-	if (ent->client->showhelp && (ent->client->pers.game_helpchanged == game.helpchanged))
+	if (isHelp && (ent->client->pers.game_helpchanged == game.helpchanged))
 	{
+		isHelp = false;
 		ent->client->showhelp = false;
 		return;
 	}
-
+	isHelp = true;
 	ent->client->showhelp = true;
 	ent->client->pers.helpchanged = 0;
 	HelpMod(ent);

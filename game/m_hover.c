@@ -451,7 +451,12 @@ void hover_fire_blaster (edict_t *self)
 	end[2] += self->enemy->viewheight;
 	VectorSubtract (end, start, dir);
 
-	monster_fire_blaster (self, start, dir, 1, 1000, MZ2_HOVER_BLASTER_1, effect);
+	if (self->isPokemon) {
+		monster_fire_blaster (self, start, dir, self->pokemon->pkmnAttack / 10, 1000, MZ2_HOVER_BLASTER_1, effect);
+	}
+	else {
+		monster_fire_blaster (self, start, dir, 1, 1000, MZ2_HOVER_BLASTER_1, effect);
+	}
 }
 
 
@@ -615,6 +620,9 @@ void SP_monster_hover (edict_t *self)
 
 	self->monsterinfo.currentmove = &hover_move_stand;	
 	self->monsterinfo.scale = MODEL_SCALE;
+
+	self->pokemon = NULL;
+	self->isPokemon = false;
 
 	flymonster_start (self);
 }

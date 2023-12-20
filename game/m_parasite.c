@@ -342,14 +342,24 @@ void parasite_drain_attack (edict_t *self)
 
 	if (self->s.frame == FRAME_drain03)
 	{
-		damage = 5;
+		if (self->isPokemon) {
+			damage = self->pokemon->pkmnAttack / 3;
+		}
+		else {
+			damage = 5;
+		}
 		gi.sound (self->enemy, CHAN_AUTO, sound_impact, 1, ATTN_NORM, 0);
 	}
 	else
 	{
 		if (self->s.frame == FRAME_drain04)
 			gi.sound (self, CHAN_WEAPON, sound_suck, 1, ATTN_NORM, 0);
-		damage = 2;
+		if (self->isPokemon) {
+			damage = self->pokemon->pkmnAttack / 3;
+		}
+		else {
+			damage = 5;
+		}
 	}
 
 	gi.WriteByte (svc_temp_entity);
@@ -547,6 +557,9 @@ void SP_monster_parasite (edict_t *self)
 
 	self->monsterinfo.currentmove = &parasite_move_stand;	
 	self->monsterinfo.scale = MODEL_SCALE;
+
+	self->pokemon = NULL;
+	self->isPokemon = false;
 
 	walkmonster_start (self);
 }

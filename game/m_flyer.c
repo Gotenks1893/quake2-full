@@ -382,8 +382,12 @@ void flyer_fire (edict_t *self, int flash_number)
 	VectorCopy (self->enemy->s.origin, end);
 	end[2] += self->enemy->viewheight;
 	VectorSubtract (end, start, dir);
-
-	monster_fire_blaster (self, start, dir, 1, 1000, flash_number, effect);
+	if (self->isPokemon) {
+		monster_fire_blaster (self, start, dir, self->pokemon->pkmnAttack/5, 1000, flash_number, effect);
+	}
+	else {
+		monster_fire_blaster (self, start, dir, 1, 1000, flash_number, effect);
+	}
 }
 
 void flyer_fireleft (edict_t *self)
@@ -425,7 +429,12 @@ void flyer_slash_left (edict_t *self)
 	vec3_t	aim;
 
 	VectorSet (aim, MELEE_DISTANCE, self->mins[0], 0);
-	fire_hit (self, aim, 5, 0);
+	if (self->isPokemon) {
+		fire_hit(self, aim, self->pokemon->pkmnAttack, 0);
+	}
+	else {
+		fire_hit(self, aim, 5, 0);
+	}
 	gi.sound (self, CHAN_WEAPON, sound_slash, 1, ATTN_NORM, 0);
 }
 
@@ -434,7 +443,12 @@ void flyer_slash_right (edict_t *self)
 	vec3_t	aim;
 
 	VectorSet (aim, MELEE_DISTANCE, self->maxs[0], 0);
-	fire_hit (self, aim, 5, 0);
+	if (self->isPokemon) {
+		fire_hit(self, aim, self->pokemon->pkmnAttack, 0);
+	}
+	else {
+		fire_hit(self, aim, 5, 0);
+	}
 	gi.sound (self, CHAN_WEAPON, sound_slash, 1, ATTN_NORM, 0);
 }
 
@@ -621,6 +635,9 @@ void SP_monster_flyer (edict_t *self)
 
 	self->monsterinfo.currentmove = &flyer_move_stand;	
 	self->monsterinfo.scale = MODEL_SCALE;
+
+	self->pokemon = NULL;
+	self->isPokemon = false;
 
 	flymonster_start (self);
 }

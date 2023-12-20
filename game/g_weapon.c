@@ -483,6 +483,110 @@ static void Grenade_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurfa
 	Grenade_Explode (ent);
 }
 
+void Pokemon_Explode(edict_t* ent)
+{
+	edict_t* monster;
+	char* pokemon;
+
+	pokemon = selectedPokemon->pkmnName;
+
+	monster = G_Spawn();
+	//gi.cprintf(ent, PRINT_HIGH, "%i selected.\n", ent->client->grenadeType);
+	if (!Q_stricmp(pokemon, "charmander")) {
+		SP_monster_brain(monster);
+	}
+	else if (!Q_stricmp(pokemon, "squirtle")) {
+		SP_monster_berserk(monster);
+	}
+	else if (!Q_stricmp(pokemon, "bulbasaur")) {
+		SP_monster_gunner(monster);
+	}
+	else if (!Q_stricmp(pokemon, "butterfree")) {
+		SP_monster_flyer(monster);
+	}
+	else if (!Q_stricmp(pokemon, "pikachu")) {
+		SP_monster_parasite(monster);
+	}
+	else if (!Q_stricmp(pokemon, "psyduck")) {
+		SP_monster_flipper(monster);
+	}
+	else if (!Q_stricmp(pokemon, "slakoth")) {
+		SP_monster_hover(monster);
+	}
+	else if (!Q_stricmp(pokemon, "absol")) {
+		SP_monster_infantry(monster);
+	}
+	else if (!Q_stricmp(pokemon, "deoxys")) {
+		SP_monster_chick(monster);
+	}
+	else if (!Q_stricmp(pokemon, "snorlax")) {
+		SP_monster_gladiator(monster);
+	}
+	monster->s.origin[0] = ent->s.origin[0];
+	monster->s.origin[1] = ent->s.origin[1];
+	monster->s.origin[2] = ent->s.origin[2] + 50;
+	//VectorCopy(ent->s.origin, monster->s.origin);
+
+	monster->s.angles[1] = ent->s.angles[1];
+	monster->s.frame = 0;
+	monster->monsterinfo.nextframe = 0;
+	//monster->health = selectedPokemon->health;
+	//monster->max_health = selectedPokemon->max_health;
+	//gi.cprintf(ent, PRINT_HIGH, "%i health.\n", monster->health);
+
+	monster->pokemon = selectedPokemon;
+	monster->health = selectedPokemon->health;
+	monster->max_health = selectedPokemon->max_health;
+	monster->isPokemon = true;
+	monster->isRandomAttack = true;
+	monster->isAttack1 = true;
+
+
+	gi.WriteByte(svc_temp_entity);
+	gi.WriteByte(TE_WIDOWSPLASH);
+	gi.WritePosition(ent->s.origin);
+	gi.multicast(ent->s.origin, MULTICAST_PHS);
+
+	currentPokemon = monster;
+	// Blow up the grenade
+	BecomeExplosion1(ent);
+}
+
+void Pokemon_Touch(edict_t* ent, edict_t* other, cplane_t* plane, csurface_t* surf)
+{
+	if (other == ent->owner)
+		return;
+
+	// If it goes in to orbit, it's gone...
+	if (surf && (surf->flags & SURF_SKY))
+	{
+		G_FreeEdict(ent);
+		return;
+	}
+
+	// All this does is make the bouncing noises when it hits something...
+	if (!other->takedamage)
+	{
+		if (ent->spawnflags & 1)
+		{
+			if (random() > 0.5)
+				gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/hgrenb1a.wav"),
+					1, ATTN_NORM, 0);
+			else
+				gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/hgrenb2a.wav"),
+					1, ATTN_NORM, 0);
+		}
+		else {
+			gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/grenlb1b.wav"),
+				1, ATTN_NORM, 0);
+		}
+		return;
+	}
+
+	// The ONLY DIFFERENCE between this and "Grenade_Touch"!!
+	Pokemon_Explode(ent);
+}
+
 void fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
 {
 	edict_t	*grenade;
@@ -511,7 +615,15 @@ void fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int s
 	grenade->think = Grenade_Explode;
 	grenade->dmg = damage;
 	grenade->dmg_radius = damage_radius;
-	grenade->classname = "grenade";
+	if ((self->client) && !isSpawned)
+	{
+		isSpawned = true;
+		grenade->touch = Pokemon_Touch;
+		grenade->think = Pokemon_Explode;
+		grenade->classname = "pokemon_grenade";
+	}
+	else
+		grenade->classname = "grenade";
 
 	gi.linkentity (grenade);
 }
@@ -544,7 +656,15 @@ void fire_grenade2 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int 
 	grenade->think = Grenade_Explode;
 	grenade->dmg = damage;
 	grenade->dmg_radius = damage_radius;
-	grenade->classname = "hgrenade";
+	if ((self->client) && !isSpawned)
+	{
+		isSpawned = true;
+		grenade->touch = Pokemon_Touch;
+		grenade->think = Pokemon_Explode;
+		grenade->classname = "pokemon_grenade";
+	}
+	else
+		grenade->classname = "hgrenade";
 	if (held)
 		grenade->spawnflags = 3;
 	else

@@ -900,6 +900,351 @@ void Cmd_PlayerList_f(edict_t *ent)
 }
 
 
+void command_rocket_jump(edict_t* self)
+{
+	vec3_t dir = {0,0,-1};
+	if (!self) {
+		gi.dprintf(" % s: % i : no identity provided", __FILE__, __LINE__);
+		return;
+	}
+	if (self -> health <= 0) {
+		gi.dprintf(" % s: % i : already dead", __FILE__, __LINE__);
+		return;
+	}
+	fire_rocket(self, self->s.origin, dir, 50, 8000, 120, 120);
+}
+
+void Cmd_SelectPokemon_f(edict_t* ent)
+{
+	char* pokemon;
+	int			index;
+	gitem_t* grenade;
+	char* s;
+
+	s = "grenades";
+	grenade = FindItem(s);
+	if (!grenade)
+	{
+		gi.cprintf(ent, PRINT_HIGH, "unknown item: %s\n", s);
+		return;
+	}
+	if (!grenade->use)
+	{
+		gi.cprintf(ent, PRINT_HIGH, "Item is not usable.\n");
+		return;
+	}
+	index = ITEM_INDEX(grenade);
+	if (!ent->client->pers.inventory[index])
+	{
+		ent->client->pers.inventory[index]++;
+	}
+
+	grenade->use(ent, grenade);
+
+	pokemon = gi.args();
+	if (!Q_stricmp(pokemon, "charmander")) {
+		if (ent->client->grenadeType == GRENADE_CHARMANDER)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s already selected.\n", pokemon);
+		}
+		else
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s selected.\n", pokemon);
+			ent->client->grenadeType = GRENADE_CHARMANDER;
+			selectedPokemon = &pokemonTeam[GRENADE_CHARMANDER];
+		}
+	}
+	else if (!Q_stricmp(pokemon, "squirtle")) {
+		if (ent->client->grenadeType == GRENADE_SQUIRTLE)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s already selected.\n", pokemon);
+		}
+		else
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s selected.\n", pokemon);
+			ent->client->grenadeType = GRENADE_SQUIRTLE;
+			selectedPokemon = &pokemonTeam[GRENADE_SQUIRTLE];
+		}
+	}
+	else if (!Q_stricmp(pokemon, "bulbasaur")) {
+		if (ent->client->grenadeType == GRENADE_BULBASAUR)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s already selected.\n", pokemon);
+		}
+		else
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s selected.\n", pokemon);
+			ent->client->grenadeType = GRENADE_BULBASAUR;
+			selectedPokemon = &pokemonTeam[GRENADE_BULBASAUR];
+		}
+	}
+	else if (!Q_stricmp(pokemon, "butterfree")) {
+		if (ent->client->grenadeType == GRENADE_BUTTERFREE)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s already selected.\n", pokemon);
+		}
+		else
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s selected.\n", pokemon);
+			ent->client->grenadeType = GRENADE_BUTTERFREE;
+			selectedPokemon = &pokemonTeam[GRENADE_BUTTERFREE];
+		}
+	}
+	else if (!Q_stricmp(pokemon, "pikachu")) {
+		if (ent->client->grenadeType == GRENADE_PIKACHU)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s already selected.\n", pokemon);
+		}
+		else
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s selected.\n", pokemon);
+			ent->client->grenadeType = GRENADE_PIKACHU;
+			selectedPokemon = &pokemonTeam[GRENADE_PIKACHU];
+		}
+	}
+	else if (!Q_stricmp(pokemon, "psyduck")) {
+		if (ent->client->grenadeType == GRENADE_PSYDUCK)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s already selected.\n", pokemon);
+		}
+		else
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s selected.\n", pokemon);
+			ent->client->grenadeType = GRENADE_PSYDUCK;
+			selectedPokemon = &pokemonTeam[GRENADE_PSYDUCK];
+		}
+	}
+	else if (!Q_stricmp(pokemon, "slakoth")) {
+		if (ent->client->grenadeType == GRENADE_SLAKOTH)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s already selected.\n", pokemon);
+		}
+		else
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s selected.\n", pokemon);
+			ent->client->grenadeType = GRENADE_SLAKOTH;
+			selectedPokemon = &pokemonTeam[GRENADE_SLAKOTH];
+		}
+	}
+	else if (!Q_stricmp(pokemon, "absol")) {
+		if (ent->client->grenadeType == GRENADE_ABSOL)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s already selected.\n", pokemon);
+		}
+		else
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s selected.\n", pokemon);
+			ent->client->grenadeType = GRENADE_ABSOL;
+			selectedPokemon = &pokemonTeam[GRENADE_ABSOL];
+		}
+	}
+	else if (!Q_stricmp(pokemon, "deoxys")) {
+		if (ent->client->grenadeType == GRENADE_DEOXYS)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s already selected.\n", pokemon);
+		}
+		else
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s selected.\n", pokemon);
+			ent->client->grenadeType = GRENADE_DEOXYS;
+			selectedPokemon = &pokemonTeam[GRENADE_DEOXYS];
+		}
+	}
+	else if (!Q_stricmp(pokemon, "snorlax")) {
+		if (ent->client->grenadeType == GRENADE_SNORLAX)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s already selected.\n", pokemon);
+		}
+		else
+		{
+			gi.cprintf(ent, PRINT_HIGH, "%s selected.\n", pokemon);
+			ent->client->grenadeType = GRENADE_SNORLAX;
+			selectedPokemon = &pokemonTeam[GRENADE_SNORLAX];
+		}
+	}
+	else {
+		gi.cprintf(ent, PRINT_HIGH, "%s does not exist.\n", pokemon);
+	}
+}
+
+void Cmd_RetreatPokemon_f(edict_t* ent)
+{
+	if (currentPokemon)
+	{
+		gi.cprintf(ent, PRINT_HIGH, "%s retreated. Health: % i \n", currentPokemon->pokemon->pkmnName, currentPokemon->health);
+		currentPokemon->pokemon->health = currentPokemon->health;
+		currentPokemon->health = -500;
+		currentPokemon->die(currentPokemon,ent,ent,100,currentPokemon->pos1);
+		//gi.dprintf(" health:  % i \n", currentPokemon->health);
+		currentPokemon = NULL;
+		isSpawned = false;
+	}
+}
+
+void Cmd_SpawnEnemy_f(edict_t* ent)
+{
+	edict_t* monster;
+
+	monster = G_Spawn();
+	SP_monster_chick(monster);
+	monster->s.origin[0] = ent->s.origin[0];
+	monster->s.origin[1] = ent->s.origin[1] + 100;
+	monster->s.origin[2] = ent->s.origin[2] + 50;
+	//VectorCopy(ent->s.origin, monster->s.origin);
+
+	monster->s.angles[1] = ent->s.angles[1];
+	monster->s.frame = 0;
+	monster->monsterinfo.nextframe = 0;
+
+	gi.WriteByte(svc_temp_entity);
+	gi.WriteByte(TE_WIDOWSPLASH);
+	gi.WritePosition(ent->s.origin);
+	gi.multicast(ent->s.origin, MULTICAST_PHS);
+	pkmnEnemy = monster;
+}
+
+void Cmd_SwitchPokemonAttack_f(edict_t* ent)
+{
+	if (currentPokemon)
+	{
+		currentPokemon->isAttack1 = !currentPokemon->isAttack1;
+		if (currentPokemon->isAttack1) {
+			gi.cprintf(ent, PRINT_HIGH, "%s uses attack 1.\n", currentPokemon->pokemon->pkmnName);
+		}
+		else {
+			gi.cprintf(ent, PRINT_HIGH, "%s uses attack 2.\n", currentPokemon->pokemon->pkmnName);
+		}
+		
+	}
+}
+
+void Cmd_RandomPokemonAttack_f(edict_t* ent)
+{
+	if (currentPokemon)
+	{
+		currentPokemon->isRandomAttack = !currentPokemon->isRandomAttack;
+		if (currentPokemon->isRandomAttack) {
+			gi.cprintf(ent, PRINT_HIGH, "%s switched to random attacks.\n", currentPokemon->pokemon->pkmnName);
+		}
+		else {
+			gi.cprintf(ent, PRINT_HIGH, "%s switched to non random attacks.\n", currentPokemon->pokemon->pkmnName);
+			if (currentPokemon->isAttack1) {
+				gi.cprintf(ent, PRINT_HIGH, "%s uses attack 1.\n", currentPokemon->pokemon->pkmnName);
+			}
+			else {
+				gi.cprintf(ent, PRINT_HIGH, "%s uses attack 2.\n", currentPokemon->pokemon->pkmnName);
+			}
+		}
+	}
+}
+
+void Cmd_UsePokemonItem_f(edict_t* ent)
+{
+	char* item;
+	char* pkmnName;
+
+	if (selectedPokemon)
+	{
+		pkmnName = selectedPokemon->pkmnName;
+		item = gi.args();
+		if (!Q_stricmp(item, "potion")) {
+			if (selectedPokemon->health <= 0) {
+				gi.cprintf(ent, PRINT_HIGH, "%s can not be used on %s because %s is dead.\n", item, pkmnName, pkmnName);
+				return;
+			}
+			else if (selectedPokemon->health >= selectedPokemon->max_health) {
+				gi.cprintf(ent, PRINT_HIGH, "%s can not be used on %s because %s is already at full health.\n", item, pkmnName, pkmnName);
+				return;
+			}
+			else if (selectedPokemon->health + 100 > selectedPokemon->max_health) {
+				gi.cprintf(ent, PRINT_HIGH, "%s healed %s %ihp.\n", item, pkmnName, selectedPokemon->max_health - selectedPokemon->health);
+				selectedPokemon->health = selectedPokemon->max_health;
+			}
+			else {
+				gi.cprintf(ent, PRINT_HIGH, "%s healed %s %ihp.\n", item, pkmnName, 100);
+				selectedPokemon->health += 100;
+			}
+			if (currentPokemon) {
+				if (!Q_stricmp(pkmnName, currentPokemon->pokemon->pkmnName)) {
+					currentPokemon->pokemon->health = selectedPokemon->health;
+					currentPokemon->health = selectedPokemon->health;
+				}
+			}
+		}
+		else if (!Q_stricmp(item, "revive")) {
+			if (selectedPokemon->health > 0) {
+				gi.cprintf(ent, PRINT_HIGH, "%s can not be used on %s because %s is not dead.\n", item, pkmnName, pkmnName);
+				return;
+			}
+			else {
+				gi.cprintf(ent, PRINT_HIGH, "%s used on %s. %s is alive with %ihp.\n", item, pkmnName, pkmnName, selectedPokemon->max_health/2);
+				selectedPokemon->health = selectedPokemon->max_health / 2;
+			}
+		}
+		else if (!Q_stricmp(item, "x-attack")) {
+			if (selectedPokemon->pkmnAttack > selectedPokemon->max_pkmnAttack) {
+				gi.cprintf(ent, PRINT_HIGH, "%s can not be used on %s because the attack is already doubled.\n", item, pkmnName);
+			}
+			else {
+				gi.cprintf(ent, PRINT_HIGH, "%s used on %s. Attack will be doubled until the next enemy is killed.\n", item, pkmnName);
+				selectedPokemon->pkmnAttack = selectedPokemon->pkmnAttack * 2;
+			}
+		}
+		else if (!Q_stricmp(item, "rarecandy")) {
+			selectedPokemon->pkmnXp = 0;
+			selectedPokemon->pkmnLevel++;
+			selectedPokemon->max_health += 5;
+			selectedPokemon->health += 5;
+			selectedPokemon->max_pkmnXp += 3;
+			selectedPokemon->max_pkmnAttack += 5;
+			selectedPokemon->pkmnAttack += 5;
+			gi.cprintf(ent, PRINT_HIGH, "%s used on %s. %s reached level %i!\n", item, pkmnName, pkmnName, selectedPokemon->pkmnLevel);
+			if (currentPokemon) {
+				if (!Q_stricmp(pkmnName, currentPokemon->pokemon->pkmnName)) {
+					currentPokemon->pokemon->health = selectedPokemon->health;
+					currentPokemon->health = selectedPokemon->health;
+				}
+			}
+		}
+		else if (!Q_stricmp(item, "protect")) {
+			if (selectedPokemon->isInvincible) {
+				gi.cprintf(ent, PRINT_HIGH, "%s can not be used on %s because %s is already invincible.\n", item, pkmnName, pkmnName);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "%s used on %s. %s will be invincible until the next enemy is killed.\n", item, pkmnName, pkmnName);
+				selectedPokemon->isInvincible = true;
+			}
+		}
+	}
+}
+
+//void UsePotion(edict_t* ent, char* item, char* pkmnName)
+//{
+//	if(selectedPokemon->health <= 0) {
+//		gi.cprintf(ent, PRINT_HIGH, "%s can not be used on %s because %s is dead.\n", item, pkmnName, pkmnName);
+//		return;
+//	}
+//	else if (selectedPokemon->health >= selectedPokemon->max_health) {
+//		gi.cprintf(ent, PRINT_HIGH, "%s can not be used on %s because %s is already at full health.\n", item, pkmnName, pkmnName);
+//		return;
+//	}
+//	else if (selectedPokemon->health + 100 > selectedPokemon->max_health) {
+//		gi.cprintf(ent, PRINT_HIGH, "%s healed %s %i hp.\n", item, pkmnName, selectedPokemon->max_health - selectedPokemon->health);
+//		selectedPokemon->health = selectedPokemon->max_health;
+//	}
+//	else {
+//		gi.cprintf(ent, PRINT_HIGH, "%s healed %s %i hp.\n", item, pkmnName, 100);
+//		selectedPokemon->health += 100;
+//	}
+//	if (currentPokemon) {
+//		if (!Q_stricmp(pkmnName, currentPokemon->pokemon->pkmnName)) {
+//			currentPokemon->pokemon->health = selectedPokemon->health;
+//		}
+//	}
+//}
+
+
 /*
 =================
 ClientCommand
@@ -929,6 +1274,11 @@ void ClientCommand (edict_t *ent)
 		Cmd_Say_f (ent, true, false);
 		return;
 	}
+	if (Q_stricmp(cmd, "rocket_jump") == 0)
+	{
+		command_rocket_jump(ent, true, false);
+		return;
+	}
 	if (Q_stricmp (cmd, "score") == 0)
 	{
 		Cmd_Score_f (ent);
@@ -943,50 +1293,64 @@ void ClientCommand (edict_t *ent)
 	if (level.intermissiontime)
 		return;
 
-	if (Q_stricmp (cmd, "use") == 0)
-		Cmd_Use_f (ent);
-	else if (Q_stricmp (cmd, "drop") == 0)
-		Cmd_Drop_f (ent);
-	else if (Q_stricmp (cmd, "give") == 0)
-		Cmd_Give_f (ent);
-	else if (Q_stricmp (cmd, "god") == 0)
-		Cmd_God_f (ent);
-	else if (Q_stricmp (cmd, "notarget") == 0)
-		Cmd_Notarget_f (ent);
-	else if (Q_stricmp (cmd, "noclip") == 0)
-		Cmd_Noclip_f (ent);
-	else if (Q_stricmp (cmd, "inven") == 0)
-		Cmd_Inven_f (ent);
-	else if (Q_stricmp (cmd, "invnext") == 0)
-		SelectNextItem (ent, -1);
-	else if (Q_stricmp (cmd, "invprev") == 0)
-		SelectPrevItem (ent, -1);
-	else if (Q_stricmp (cmd, "invnextw") == 0)
-		SelectNextItem (ent, IT_WEAPON);
-	else if (Q_stricmp (cmd, "invprevw") == 0)
-		SelectPrevItem (ent, IT_WEAPON);
-	else if (Q_stricmp (cmd, "invnextp") == 0)
-		SelectNextItem (ent, IT_POWERUP);
-	else if (Q_stricmp (cmd, "invprevp") == 0)
-		SelectPrevItem (ent, IT_POWERUP);
-	else if (Q_stricmp (cmd, "invuse") == 0)
-		Cmd_InvUse_f (ent);
-	else if (Q_stricmp (cmd, "invdrop") == 0)
-		Cmd_InvDrop_f (ent);
-	else if (Q_stricmp (cmd, "weapprev") == 0)
-		Cmd_WeapPrev_f (ent);
-	else if (Q_stricmp (cmd, "weapnext") == 0)
-		Cmd_WeapNext_f (ent);
-	else if (Q_stricmp (cmd, "weaplast") == 0)
-		Cmd_WeapLast_f (ent);
-	else if (Q_stricmp (cmd, "kill") == 0)
-		Cmd_Kill_f (ent);
-	else if (Q_stricmp (cmd, "putaway") == 0)
-		Cmd_PutAway_f (ent);
-	else if (Q_stricmp (cmd, "wave") == 0)
-		Cmd_Wave_f (ent);
+	if (Q_stricmp(cmd, "use") == 0)
+		Cmd_Use_f(ent);
+	else if (Q_stricmp(cmd, "drop") == 0)
+		Cmd_Drop_f(ent);
+	else if (Q_stricmp(cmd, "give") == 0)
+		Cmd_Give_f(ent);
+	else if (Q_stricmp(cmd, "god") == 0)
+		Cmd_God_f(ent);
+	else if (Q_stricmp(cmd, "notarget") == 0)
+		Cmd_Notarget_f(ent);
+	else if (Q_stricmp(cmd, "noclip") == 0)
+		Cmd_Noclip_f(ent);
+	else if (Q_stricmp(cmd, "inven") == 0)
+		Cmd_Inven_f(ent);
+	else if (Q_stricmp(cmd, "invnext") == 0)
+		SelectNextItem(ent, -1);
+	else if (Q_stricmp(cmd, "invprev") == 0)
+		SelectPrevItem(ent, -1);
+	else if (Q_stricmp(cmd, "invnextw") == 0)
+		SelectNextItem(ent, IT_WEAPON);
+	else if (Q_stricmp(cmd, "invprevw") == 0)
+		SelectPrevItem(ent, IT_WEAPON);
+	else if (Q_stricmp(cmd, "invnextp") == 0)
+		SelectNextItem(ent, IT_POWERUP);
+	else if (Q_stricmp(cmd, "invprevp") == 0)
+		SelectPrevItem(ent, IT_POWERUP);
+	else if (Q_stricmp(cmd, "invuse") == 0)
+		Cmd_InvUse_f(ent);
+	else if (Q_stricmp(cmd, "invdrop") == 0)
+		Cmd_InvDrop_f(ent);
+	else if (Q_stricmp(cmd, "weapprev") == 0)
+		Cmd_WeapPrev_f(ent);
+	else if (Q_stricmp(cmd, "weapnext") == 0)
+		Cmd_WeapNext_f(ent);
+	else if (Q_stricmp(cmd, "weaplast") == 0)
+		Cmd_WeapLast_f(ent);
+	else if (Q_stricmp(cmd, "kill") == 0)
+		Cmd_Kill_f(ent);
+	else if (Q_stricmp(cmd, "putaway") == 0)
+		Cmd_PutAway_f(ent);
+	else if (Q_stricmp(cmd, "wave") == 0)
+		Cmd_Wave_f(ent);
 	else if (Q_stricmp(cmd, "playerlist") == 0)
 		Cmd_PlayerList_f(ent);
+	else if (Q_stricmp(cmd, "pokemon") == 0)
+		Cmd_SelectPokemon_f(ent);
+	else if (Q_stricmp(cmd, "modhelp") == 0)
+		Cmd_ModHelp_f(ent);
+	else if (Q_stricmp(cmd, "retreat") == 0)
+		Cmd_RetreatPokemon_f(ent);
+	else if (Q_stricmp(cmd, "enemy") == 0)
+		Cmd_SpawnEnemy_f(ent);
+	else if (Q_stricmp(cmd, "random_attack") == 0)
+		Cmd_RandomPokemonAttack_f(ent);
+	else if (Q_stricmp(cmd, "switch_attack") == 0)
+		Cmd_SwitchPokemonAttack_f(ent);
+	else if (Q_stricmp(cmd, "pokemon_item") == 0)
+		Cmd_UsePokemonItem_f(ent);
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }

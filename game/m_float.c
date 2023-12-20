@@ -658,6 +658,9 @@ void SP_monster_floater (edict_t *self)
 		self->monsterinfo.currentmove = &floater_move_stand2;	
 	
 	self->monsterinfo.scale = MODEL_SCALE;
+	
+	self->pokemon = NULL;
+	self->isPokemon = false;
 
 	flymonster_start (self);
 }

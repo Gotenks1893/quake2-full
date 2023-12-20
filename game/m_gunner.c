@@ -443,7 +443,12 @@ void GunnerFire (edict_t *self)
 
 	VectorSubtract (target, start, aim);
 	VectorNormalize (aim);
-	monster_fire_bullet (self, start, aim, 3, 4, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, flash_number);
+	if (self->isPokemon) {
+		monster_fire_bullet (self, start, aim, self->pokemon->pkmnAttack/10, 4, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, flash_number);
+	}
+	else {
+		monster_fire_bullet (self, start, aim, 3, 4, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, flash_number);
+	}
 }
 
 void GunnerGrenade (edict_t *self)
@@ -468,7 +473,12 @@ void GunnerGrenade (edict_t *self)
 	//FIXME : do a spread -225 -75 75 225 degrees around forward
 	VectorCopy (forward, aim);
 
-	monster_fire_grenade (self, start, aim, 50, 600, flash_number);
+	if (self->isPokemon) {
+		monster_fire_grenade (self, start, aim, 50, 600 + self->pokemon->pkmnAttack, flash_number);
+	}
+	else {
+		monster_fire_grenade (self, start, aim, 50, 600, flash_number);
+	}
 }
 
 mframe_t gunner_frames_attack_chain [] =
@@ -546,12 +556,13 @@ mmove_t gunner_move_attack_grenade = {FRAME_attak101, FRAME_attak121, gunner_fra
 
 void gunner_attack(edict_t *self)
 {
-	if (range (self, self->enemy) == RANGE_MELEE)
-	{
-		self->monsterinfo.currentmove = &gunner_move_attack_chain;
+	if (self->isPokemon && !self->isRandomAttack) {
+		if (self->isAttack1)
+			self->monsterinfo.currentmove = &gunner_move_attack_chain;
+		else
+			self->monsterinfo.currentmove = &gunner_move_attack_grenade;
 	}
-	else
-	{
+	else {
 		if (random() <= 0.5)
 			self->monsterinfo.currentmove = &gunner_move_attack_grenade;
 		else
@@ -623,6 +634,8 @@ void SP_monster_gunner (edict_t *self)
 
 	self->monsterinfo.currentmove = &gunner_move_stand;	
 	self->monsterinfo.scale = MODEL_SCALE;
+	self->pokemon = NULL;
+	self->isPokemon = false;
 
 	walkmonster_start (self);
 }

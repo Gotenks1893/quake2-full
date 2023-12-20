@@ -444,7 +444,12 @@ void ChickSlash (edict_t *self)
 
 	VectorSet (aim, MELEE_DISTANCE, self->mins[0], 10);
 	gi.sound (self, CHAN_WEAPON, sound_melee_swing, 1, ATTN_NORM, 0);
-	fire_hit (self, aim, (10 + (rand() %6)), 100);
+	if (self->isPokemon) {
+		fire_hit (self, aim, (self->pokemon->pkmnAttack + (rand() %6)), 100);
+	}
+	else {
+		fire_hit (self, aim, (10 + (rand() %6)), 100);
+	}
 }
 
 
@@ -462,8 +467,12 @@ void ChickRocket (edict_t *self)
 	vec[2] += self->enemy->viewheight;
 	VectorSubtract (vec, start, dir);
 	VectorNormalize (dir);
-
-	monster_fire_rocket (self, start, dir, 50, 500, MZ2_CHICK_ROCKET_1);
+	if (self->isPokemon) {
+		monster_fire_rocket (self, start, dir, 50, 500 + self->pokemon->pkmnAttack, MZ2_CHICK_ROCKET_1);
+	}
+	else {
+		monster_fire_rocket (self, start, dir, 50, 500, MZ2_CHICK_ROCKET_1);
+	}
 }	
 
 void Chick_PreAttack1 (edict_t *self)
@@ -672,6 +681,9 @@ void SP_monster_chick (edict_t *self)
 
 	self->monsterinfo.currentmove = &chick_move_stand;
 	self->monsterinfo.scale = MODEL_SCALE;
+
+	self->pokemon = NULL;
+	self->isPokemon = false;
 
 	walkmonster_start (self);
 }

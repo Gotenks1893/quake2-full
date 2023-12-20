@@ -182,7 +182,12 @@ void flipper_bite (edict_t *self)
 	vec3_t	aim;
 
 	VectorSet (aim, MELEE_DISTANCE, 0, 0);
-	fire_hit (self, aim, 5, 0);
+	if (self->isPokemon) {
+		fire_hit (self, aim, self->pokemon->pkmnAttack, 0);
+	}
+	else {
+		fire_hit (self, aim, 5, 0);
+	}
 }
 
 void flipper_preattack (edict_t *self)
@@ -398,6 +403,9 @@ void SP_monster_flipper (edict_t *self)
 
 	self->monsterinfo.currentmove = &flipper_move_stand;	
 	self->monsterinfo.scale = MODEL_SCALE;
+
+	self->pokemon = NULL;
+	self->isPokemon = false;
 
 	swimmonster_start (self);
 }

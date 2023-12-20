@@ -292,8 +292,12 @@ void InfantryMachineGun (edict_t *self)
 		VectorSubtract (self->s.angles, aimangles[flash_number-MZ2_INFANTRY_MACHINEGUN_2], vec);
 		AngleVectors (vec, forward, NULL, NULL);
 	}
-
-	monster_fire_bullet (self, start, forward, 3, 4, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, flash_number);
+	if (self->isPokemon) {
+		monster_fire_bullet (self, start, forward, self->pokemon->pkmnAttack / 10, 4, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, flash_number);
+	}
+	else {
+		monster_fire_bullet (self, start, forward, 3, 4, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, flash_number);
+	}
 }
 
 void infantry_sight (edict_t *self, edict_t *other)
@@ -525,8 +529,15 @@ void infantry_smack (edict_t *self)
 	vec3_t	aim;
 
 	VectorSet (aim, MELEE_DISTANCE, 0, 0);
-	if (fire_hit (self, aim, (5 + (rand() % 5)), 50))
-		gi.sound (self, CHAN_WEAPON, sound_punch_hit, 1, ATTN_NORM, 0);
+	if (self->isPokemon) {
+		if (fire_hit(self, aim, (self->pokemon->pkmnAttack + (rand() % 5)), 50))
+			gi.sound(self, CHAN_WEAPON, sound_punch_hit, 1, ATTN_NORM, 0);
+	}
+	else {
+		if (fire_hit(self, aim, (5 + (rand() % 5)), 50))
+			gi.sound(self, CHAN_WEAPON, sound_punch_hit, 1, ATTN_NORM, 0);
+	}
+	
 }
 
 mframe_t infantry_frames_attack2 [] =
@@ -544,10 +555,19 @@ mmove_t infantry_move_attack2 = {FRAME_attak201, FRAME_attak208, infantry_frames
 
 void infantry_attack(edict_t *self)
 {
-	if (range (self, self->enemy) == RANGE_MELEE)
-		self->monsterinfo.currentmove = &infantry_move_attack2;
-	else
-		self->monsterinfo.currentmove = &infantry_move_attack1;
+	if (self->isPokemon && !self->isRandomAttack) {
+		if (self->isAttack1)
+			self->monsterinfo.currentmove = &infantry_move_attack1;
+		else
+			self->monsterinfo.currentmove = &infantry_move_attack2;
+	}
+	else {
+		if (range(self, self->enemy) == RANGE_MELEE)
+			self->monsterinfo.currentmove = &infantry_move_attack2;
+		else
+			self->monsterinfo.currentmove = &infantry_move_attack1;
+	}
+	
 }
 
 
@@ -602,6 +622,8 @@ void SP_monster_infantry (edict_t *self)
 
 	self->monsterinfo.currentmove = &infantry_move_stand;
 	self->monsterinfo.scale = MODEL_SCALE;
+	self->pokemon = NULL;
+	self->isPokemon = false;
 
 	walkmonster_start (self);
 }

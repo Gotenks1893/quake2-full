@@ -1198,3 +1198,18 @@ typedef struct
 extern int vidref_val;
 // PGM
 // ==================
+
+#define	STAT_TIMER2_ICON	16
+#define	STAT_TIMER2		17
+#define	STAT_TIMER3_ICON	18
+#define	STAT_TIMER3		19
+#define	STAT_TIMER4_ICON	20
+#define	STAT_TIMER4		21
+#define	PKMN_NAME_TEXT		22
+#define	PKMN_NAME		23
+#define	PKMN_XP_TEXT		24
+#define	PKMN_XP		25
+#define	PKMN_ATTACK_TEXT		26
+#define	PKMN_ATTACK		27
+#define	PKMN_HEALTH_TEXT		28
+#define	PKMN_HEALTH		29
